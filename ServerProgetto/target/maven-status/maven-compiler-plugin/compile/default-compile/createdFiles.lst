@@ -1,0 +1,9 @@
+it/cipi/esercitazione/TestService.class
+it/cipi/esercitazione/VirtualObject/VORegistration.class
+it/cipi/esercitazione/VirtualObject/OnInvokeAction.class
+it/cipi/esercitazione/VirtualObject/OnReceiveData.class
+it/cipi/esercitazione/VirtualObject/UpdateSSSView.class
+it/cipi/esercitazione/ServiceListener.class
+it/cipi/esercitazione/utils/ConfigurationFileUtil.class
+it/cipi/esercitazione/WeatherData.class
+it/cipi/esercitazione/RESTServiceConfig.class
