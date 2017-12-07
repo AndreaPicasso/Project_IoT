@@ -8,6 +8,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.Base64;
@@ -17,8 +18,15 @@ import javax.imageio.ImageIO;
 
 import com.google.gson.Gson;
 
+
 public class Gateway {
+	
+	public final static String REST_URL = "http://localhost:8080/WeatherData_V0/rest/weatherdata/newWeatherData";
+
+	
 	public static void main(String args[]) {
+		
+		
 		BufferedImage img = null;
 		try {
 			while(true) {
@@ -55,13 +63,33 @@ public class Gateway {
 					
 				}
 				
+				// Invio cameras info a REST Service
+				URL url = new URL(REST_URL);
+				HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+				conn.setDoOutput(true);
+				conn.setRequestMethod("POST");
+				conn.setRequestProperty("Content-Type", "application/json");
+
+				//HashMap<String, String> input_values = new HashMap<String, String>();
+
+
+				String input = gson.toJson(cameras);
+
+				OutputStream os = null;
+				try{
+					os =conn.getOutputStream();
+					os.write(input.getBytes());
+					os.flush();
+				}catch(Exception e) {
+					System.out.println("/!\\ REST service unreachable");
+				}
+				
 				Thread.sleep(3*60*1000);
 			}
 			
 		} catch (Exception e) {
 			e.printStackTrace();
 		}   
-		System.out.println("Done");
 
 	}
 	
