@@ -25,6 +25,7 @@ public class WeatherData {
 		log= Logger.getRootLogger();
 		servletContext=sc;
 		
+		
 	}
 	
 	@POST
