@@ -11,6 +11,7 @@ import org.apache.log4j.Logger;
 import com.google.gson.Gson;
 
 import it.cipi.esercitazione.VirtualObject.OnReceiveData;
+import it.cipi.esercitazione.VirtualObject.SSSConnection;
 import it.cipi.esercitazione.VirtualObject.UpdateSSSView;
 
 import java.util.HashMap;
@@ -46,11 +47,12 @@ public class VORealObjectCommunication {
 		Gson inputValuesJson= new Gson();
 		HashMap <String, Object> inputs= (HashMap <String, Object>)inputValuesJson.fromJson(data, HashMap.class);
 		OnReceiveData onRecieveNewData =new OnReceiveData(inputs);
-		UpdateSSSView UpdateSSSView =new UpdateSSSView(inputs);
-		Thread t_sCon=new Thread(UpdateSSSView);
+		SSSConnection SSSConnection =new SSSConnection(inputs);
+		Thread t_sCon=new Thread(SSSConnection);
 		t_sCon.start();
 		Thread t_rec=new Thread(onRecieveNewData);
 		t_rec.start();
+		
 		
 		return"";
 	}

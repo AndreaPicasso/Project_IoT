@@ -30,23 +30,22 @@ public class SSSConnection implements Runnable {
 	static int sleepTime = 30000;
 	static boolean sleep = true;
 	
-	String data;
+
 	HashMap <String, Object> inputs;
 	
-	public SSSConnection(String data) {
+	public SSSConnection(HashMap <String, Object> inputs) {
 		super();
-		this.data = data;
+		this.inputs=inputs;
 	}
 	
 	
 	@Override
 	public void run() {
-		Gson inputValuesJson= new Gson();
-		inputs= (HashMap <String, Object>)inputValuesJson.fromJson(payload, HashMap.class);
-		this.UpdateSSSData(data);
+		
+		this.UpdateSSSData(inputs);
 
 	}
-	private void UpdateSSSData(String payload) {
+	private void UpdateSSSData(HashMap <String, Object> inputs) {
 		
 		try {
 			Sdk sdk = new Sdk(server, username, password);

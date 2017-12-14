@@ -96,11 +96,11 @@ public class ServiceListener implements ServletContextListener{
 		//Apri metodo di configurazione interno della mia servlet passando eventualemte
 		//dei parametri
 		it.cipi.esercitazione.VORealObjectCommunication.init(sc);
-		it.cipi.esercitazione.WeatherData.init(sc);
+		
 
-		VORegistration reg = new VORegistration(sc);
+		VORegistration reg = new VORegistration();
 		reg.register();
-		//Inoltre hashmap con evento e registrazione (Virtual Object) collegato
+		
 		
 	}
 
