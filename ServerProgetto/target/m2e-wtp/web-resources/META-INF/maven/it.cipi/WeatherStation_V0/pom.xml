@@ -53,14 +53,12 @@
 	</dependency>
 	-->
 	<!-- SpreadSheet space with external maven -->
-	
-	<!--  
+	  
   	<dependency>
   		<groupId>it.sss</groupId>
   		<artifactId>SDK</artifactId>
   		<version>0.1.25</version>
   	</dependency>
-  	-->
 
   </dependencies>
 </project>

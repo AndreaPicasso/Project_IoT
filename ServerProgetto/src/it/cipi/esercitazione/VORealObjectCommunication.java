@@ -53,7 +53,6 @@ public class VORealObjectCommunication {
 		Thread t_rec=new Thread(onRecieveNewData);
 		t_rec.start();
 		
-		
 		return"";
 	}
 	
