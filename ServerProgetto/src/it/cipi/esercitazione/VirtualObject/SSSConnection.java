@@ -1,4 +1,4 @@
-package it.cipi.esercitazione;
+package it.cipi.esercitazione.VirtualObject;
 
 import java.util.HashMap;
 import java.util.HashSet;

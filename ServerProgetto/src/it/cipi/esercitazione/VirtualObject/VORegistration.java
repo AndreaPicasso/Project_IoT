@@ -5,6 +5,8 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.HashMap;
 
+import javax.servlet.ServletContext;
+
 import com.google.gson.Gson;
 
 public class VORegistration {
@@ -14,10 +16,13 @@ public class VORegistration {
 	public static String name = "VO1";
 
 	
+	
+
 	public void register() {
 		HashMap<String, Object> data = new HashMap<String, Object>();
 		HashMap<String, String> actions = new HashMap<String, String>();
 		HashMap<String, String> events = new HashMap<String, String>();
+		events.put("1","NUM_MAX_ACCESS_EXCEDED");
 		
 		data.put("name", name);
 		data.put("actions", actions);

@@ -37,7 +37,6 @@ public class ConfigurationFileUtil {
 			log.info("Opening conf file " + fileName);
 			FileInputStream in = new FileInputStream(fileName);
 			props.load(in);
-			
 			in.close();
 		} catch (FileNotFoundException e) {
 			log.error("Property file not found: " + fileName + "\n" + e.getMessage());

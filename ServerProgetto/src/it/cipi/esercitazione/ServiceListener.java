@@ -12,7 +12,7 @@ import org.apache.log4j.Logger;
 import org.apache.log4j.PatternLayout;
 import org.apache.log4j.RollingFileAppender;
 
-import it.cipi.esercitazione.Service;
+import it.cipi.esercitazione.VORealObjectCommunication;
 import it.cipi.esercitazione.VirtualObject.VORegistration;
 import it.cipi.esercitazione.utils.ConfigurationFileUtil;
 
@@ -95,11 +95,9 @@ public class ServiceListener implements ServletContextListener{
 		ConfigurationFileUtil.readConfigFile(evt);
 		//Apri metodo di configurazione interno della mia servlet passando eventualemte
 		//dei parametri
-		it.cipi.esercitazione.Service.init(sc);
+		it.cipi.esercitazione.VORealObjectCommunication.init(sc);
 		it.cipi.esercitazione.WeatherData.init(sc);
-		
-		//Registrare VO su VO REGISTER
-		//TO SEE non cpiaxo xke metta questo errore
+
 		VORegistration reg = new VORegistration(sc);
 		reg.register();
 		//Inoltre hashmap con evento e registrazione (Virtual Object) collegato
