@@ -51,8 +51,8 @@ public class Gateway {
 					}
 					System.out.println(camera.getUrl());
 					String encoded = Base64.getEncoder().encodeToString(imageToByteArray(img));
-					//camera.img = encoded;
-					camera.img = encoded.substring(0,10);
+					camera.img = encoded;
+					//camera.img = encoded.substring(0,10);
 					
 					/*
 					byte[] decoded = Base64.getDecoder().decode(encoded);

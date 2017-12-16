@@ -52,14 +52,10 @@ public class VORealObjectCommunication {
 		System.out.println("Data Arrived");
 		Gson inputValuesJson= new Gson();
 		CameraInfo[] cameras = inputValuesJson.fromJson(data, CameraInfo[].class);
-		HashMap <String, Object> inputs= new HashMap<String, Object>();
-		for(CameraInfo camera: cameras) {
-			inputs.put(camera.getId(), camera);
-		}
 		
 
-		OnReceiveData onRecieveNewData =new OnReceiveData(inputs);
-		SSSConnection SSSConnection =new SSSConnection(inputs);
+		OnReceiveData onRecieveNewData =new OnReceiveData(cameras);
+		SSSConnection SSSConnection =new SSSConnection(cameras);
 		Thread t_sCon=new Thread(SSSConnection);
 		t_sCon.start();
 		Thread t_rec=new Thread(onRecieveNewData);

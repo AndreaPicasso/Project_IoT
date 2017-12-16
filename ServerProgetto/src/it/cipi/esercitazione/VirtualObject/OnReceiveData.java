@@ -7,12 +7,14 @@ import java.util.HashMap;
 
 import com.google.gson.Gson;
 
+import it.cipi.esercitazione.CameraInfo;
+
 public class OnReceiveData implements Runnable {
-	 private HashMap <String, Object> data;
+	 private CameraInfo[] data;
 	 
 	
 
-	public OnReceiveData(HashMap<String, Object> inputs) {
+	public OnReceiveData(CameraInfo[] inputs) {
 		super();
 		this.data = inputs;
 		}

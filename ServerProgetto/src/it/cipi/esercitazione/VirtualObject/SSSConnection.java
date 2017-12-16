@@ -7,6 +7,7 @@ import java.util.Set;
 
 import com.google.gson.Gson;
 
+import it.cipi.esercitazione.CameraInfo;
 import net.spreadsheetspace.sdk.Sdk;
 import net.spreadsheetspace.sdk.StatusCode;
 import net.spreadsheetspace.sdk.model.AddressBookDescriptor;
@@ -31,9 +32,9 @@ public class SSSConnection implements Runnable {
 	static boolean sleep = true;
 	
 
-	HashMap <String, Object> inputs;
+	CameraInfo[] inputs;
 	
-	public SSSConnection(HashMap <String, Object> inputs) {
+	public SSSConnection(CameraInfo[]  inputs) {
 		super();
 		this.inputs=inputs;
 	}
@@ -45,7 +46,7 @@ public class SSSConnection implements Runnable {
 		this.UpdateSSSData(inputs);
 
 	}
-	private void UpdateSSSData(HashMap <String, Object> inputs) {
+	private void UpdateSSSData(CameraInfo[]  inputs) {
 		
 		try {
 			Sdk sdk = new Sdk(server, username, password);
@@ -54,16 +55,13 @@ public class SSSConnection implements Runnable {
 				privateViewExample(sdk);
 			}
 			
-			if(createPublic) {
-				publicViewExample(sdk);
-			}
 		
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
 // TO SEE qui sotto le due funzioni sono da adattare al nostro per fare quello richiesto nelle specifiche
-	static public void privateViewExample(Sdk sdk) {
+	public void privateViewExample(Sdk sdk) {
 		try {
 			String view_id = "";
 			String view_server = "";
@@ -71,42 +69,37 @@ public class SSSConnection implements Runnable {
 			System.out.println("Generazione chiavi....");
 			GenerateKeyDescriptor generateKeyDescriptor = sdk.generateKey();
 			String privateKey = generateKeyDescriptor.getPrivateKey();
-			System.out.println(privateKey);
-			System.out.println("Chiave generata e salvata");
+			//System.out.println(privateKey);
+			//System.out.println("Chiave generata e salvata");
 			
-			int cols = 2;
-			int rows = 2;
+			int cols = 6;
+			int rows = inputs.length;
 			String [][] table = new String[rows][cols];
-			table[0][0] = "A";
-			table[0][1] = "B";
-			table[1][0] = "C";
-			table[1][1] = "D";
+			for(int i= 0; i<rows; i++) {
+				table[i][0] = inputs[i].getId();
+				table[i][1] = inputs[i].getName();
+				table[i][2] = inputs[i].getUrl();
+				table[i][3] = inputs[i].getX();
+				table[i][4] = inputs[i].getY();
+				table[i][5] = inputs[i].img;
+			}
 			
 			LinkedList<String> listRecipients = new LinkedList<String>();
 			listRecipients.add(recipient1);
 			Set<String> recipients = new HashSet<String>(listRecipients);
 			String excel_template = System.getProperty("user.dir") + "/template1.xlsx";
-			
-			System.out.println("\nCreazione vista privata....");
-			ViewDescriptor viewDescriptor = sdk.createPrivateView("Test Range", recipients, table, excel_template, false, false, rows, cols);
+			System.out.print(System.getProperty("user.dir"));
+			//System.out.println("\nCreazione vista privata....");
+			ViewDescriptor viewDescriptor = sdk.createPrivateView("Cameras Info", recipients, table, excel_template, false, false, rows, cols);
 			
 			if(viewDescriptor.getStatusCode() == StatusCode.OK) {
 				System.out.println("Vista privata creata");
 				view_id = viewDescriptor.getViewId();
 				view_server = viewDescriptor.getViewServer();
-				
-				System.out.println("\nVisualizzazione dati....");
 				ValuesViewDescriptor valuesViewDescriptor = sdk.getValuesView(view_id, view_server, privateKey);
 				Object[][] values = valuesViewDescriptor.getValues();
 				
-				int row = values.length;
-				int col = values[0].length;
-				for (int i=0; i<row; i++) {
-					for (int j=0;j<col; j++) {
-						System.out.println("(" + i + ", " + j + "): " + values[i][j]); 
-					}
-				}
-				
+				/*
 				table = new String[rows][cols];
 				table[0][0] = "1";
 				table[0][1] = "2";
@@ -119,12 +112,14 @@ public class SSSConnection implements Runnable {
 					System.out.println("Sleep....");
 					Thread.sleep(sleepTime);
 				}
-				
 				System.out.println("\nAggiunta destinatari...." + recipient2);
 				LinkedList<String> addListRecipients = new LinkedList<String>();
 				addListRecipients.add(recipient2);
+				*/
 				
-				ChangeRecipientDescriptor changeRecipientAddDescriptor = sdk.addRecipients(view_id, view_server, addListRecipients);
+				
+				listRecipients.add(recipient2);
+				ChangeRecipientDescriptor changeRecipientAddDescriptor = sdk.addRecipients(view_id, view_server, listRecipients);
 				if(changeRecipientAddDescriptor.getStatusCode() == StatusCode.OK) {
 					System.out.println("Destinatari aggiunti.");
 				} else {
@@ -158,14 +153,17 @@ public class SSSConnection implements Runnable {
 					ValuesViewDescriptor valuesViewDescriptorUpdate = sdk.getValuesView(view_id, view_server, privateKey);
 					values = valuesViewDescriptorUpdate.getValues();
 					
-					row = values.length;
-					col = values[0].length;
+					int row = values.length;
+					int col = values[0].length;
 					for (int i=0; i<row; i++) {
 						for (int j=0;j<col; j++) {
-							System.out.println("(" + i + ", " + j + "): " + values[i][j]); 
+							int min =Math.min(10, ((String) values[i][j]).length());
+							System.out.println("(" + i + ", " + j + "): " + ((String) values[i][j]).substring(0,min)); 
 						}
 					}
 					
+					
+					/*
 					if(sleep) {
 						System.out.println("Sleep....");
 						Thread.sleep(sleepTime);
@@ -201,6 +199,7 @@ public class SSSConnection implements Runnable {
 							System.out.println(viewDescriptorDelete.getMessages().get(i));
 						}
 					}
+					*/
 				} else {
 					System.out.println("Errore nell'update della vista");
 					System.out.println(viewDescriptorUpdate.getMessage());
@@ -216,6 +215,7 @@ public class SSSConnection implements Runnable {
 				}
 			}
 			
+			/*
 			System.out.println("\nRichiesta contatti...");
 			AddressBookDescriptor addressBookDescriptor = sdk.getAddressBook();
 			if(addressBookDescriptor.getStatusCode() == StatusCode.OK) {
@@ -250,133 +250,11 @@ public class SSSConnection implements Runnable {
 			} else {
 				System.out.println("Errore nella richiesta delle inbox view.");
 			}
+			*/
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
-
-	static public void publicViewExample(Sdk sdk) {
-		try {
-			String view_id_public = "";
-			String view_server_public = "";
-			
-			String excel_template = System.getProperty("user.dir") + "/template1.xlsx";
-			
-			int rows = 2;
-			int cols = 2;
-			
-			String[][] table = new String[rows][cols];
-			table[0][0] = "A";
-			table[0][1] = "B";
-			table[1][0] = "C";
-			table[1][1] = "D";
-			System.out.println("\nCreazione vista pubblica....");
-			ViewDescriptor viewDescriptorPublic = sdk.createPublicView("Public Range", table, excel_template, false, false, rows, cols);
-			
-			if(viewDescriptorPublic.getStatusCode() == StatusCode.OK) {
-				System.out.println("Vista pubblica creata");
-				view_id_public = viewDescriptorPublic.getViewId();
-				view_server_public = viewDescriptorPublic.getViewServer();
-				
-				System.out.println("\nVisualizzazione dati....");
-				ValuesViewDescriptor valuesViewDescriptorPublic = sdk.getValuesView(view_id_public, view_server_public, "");
-				Object[][] values = valuesViewDescriptorPublic.getValues();
-				
-				int row = values.length;
-				int col = values[0].length;
-				for (int i=0; i<row; i++) {
-					for (int j=0;j<col; j++) {
-						System.out.println("(" + i + ", " + j + "): " + values[i][j]); 
-					}
-				}
-				
-				System.out.println("\nPubblicazione vista pubblica....");
-				ViewDescriptor viewDescriptorPublish = sdk.publishPublicView(view_id_public, view_server_public, "Public Range 2", "Descrizione vista pubblica");
-				
-				if(viewDescriptorPublish.getStatusCode() == StatusCode.OK) {
-					System.out.println("Vista pubblica pubblicata correttamente.");
-					
-					if(sleep) {
-						System.out.println("Sleep....");
-						Thread.sleep(sleepTime);
-					}
-					
-					table = new String[rows][cols];
-					table[0][0] = "1";
-					table[0][1] = "2";
-					table[1][0] = "3";
-					table[1][1] = "4";
-					
-					excel_template = System.getProperty("user.dir") + "/template2.xlsx";
-					
-					System.out.println("\nUpdate vista pubblica....");
-					ViewDescriptor viewDescriptorUpdatePublic;
-					int attempts = 0;
-					/*
-					 * Do-While necessario perche' e' possibile che la vista a cui si sta facendo l'update sia stata aggiornata da Excel. In questo modo
-					 * controllo se il numero di versione che ho memorizzato e' l'ultimo a disposizione o se e' necessario farmi restituire l'ultimo
-					 * disponibile dal server.
-					*/
-					do {
-						viewDescriptorUpdatePublic = sdk.updateView(viewDescriptorPublic, table, excel_template);
-						
-						if(viewDescriptorUpdatePublic.getStatusCode() == StatusCode.WRONG_NEXT_NUMBER) {
-							viewDescriptorPublic.setNextAvailableSequenceNumber(viewDescriptorUpdatePublic.getNextAvailableSequenceNumber());
-						}
-						attempts++;
-					} while(viewDescriptorUpdatePublic.getStatusCode() != StatusCode.OK && attempts < 5);
-					
-					if(viewDescriptorUpdatePublic.getStatusCode() == StatusCode.OK) {
-						System.out.println("Update della vista effettuato");
-						
-						ValuesViewDescriptor valuesViewDescriptorUpdate = sdk.getValuesView(view_id_public, view_server_public, "");
-						values = valuesViewDescriptorUpdate.getValues();
-						
-						row = values.length;
-						col = values[0].length;
-						for (int i=0; i<row; i++) {
-							for (int j=0;j<col; j++) {
-								System.out.println("(" + i + ", " + j + "): " + values[i][j]); 
-							}
-						}
-						
-						if(sleep) {
-							System.out.println("Sleep....");
-							Thread.sleep(sleepTime);
-						}
-						
-					} else {
-						System.out.println("Errore durante l'Update della vista");
-						System.out.println(viewDescriptorUpdatePublic.getMessage());
-						for(int i=0; i< viewDescriptorUpdatePublic.getMessages().size(); i++) {
-							System.out.println(viewDescriptorUpdatePublic.getMessages().get(i));
-						}
-					}
-					
-					System.out.println("\nEliminazione vista...");
-					ViewDescriptor viewDescriptorDelete = sdk.deleteView(view_id_public, view_server_public);
-					if(viewDescriptorDelete.getStatusCode() == StatusCode.OK) {
-						System.out.println("Eliminazione effettuata");
-					} else {
-						System.out.println("Errore nell'eliminazione della vista");
-						System.out.println(viewDescriptorDelete.getMessage());
-						for(int i=0; i< viewDescriptorDelete.getMessages().size(); i++) {
-							System.out.println(viewDescriptorDelete.getMessages().get(i));
-						}
-					}
-				} else {
-					System.out.println("Errore nella pubblicazione della vista");
-					System.out.println(viewDescriptorPublic.getMessage());
-					for(int i=0; i< viewDescriptorPublic.getMessages().size(); i++) {
-						System.out.println(viewDescriptorPublic.getMessages().get(i));
-					}
-				}
-			}		
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	}
-
 	
 
 }
