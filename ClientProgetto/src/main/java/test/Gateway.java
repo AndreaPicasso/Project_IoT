@@ -4,6 +4,7 @@ import java.awt.image.BufferedImage;
 import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
+import java.io.DataOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
@@ -21,7 +22,7 @@ import com.google.gson.Gson;
 
 public class Gateway {
 	
-	public final static String REST_URL = "http://localhost:8080/WeatherData_V0/rest/weatherdata/newWeatherData";
+	public final static String REST_URL = "http://localhost:8080/WeatherStation_V0/rest/VORealObjectCommunication/newdata";
 
 	
 	public static void main(String args[]) {
@@ -50,8 +51,8 @@ public class Gateway {
 					}
 					System.out.println(camera.getUrl());
 					String encoded = Base64.getEncoder().encodeToString(imageToByteArray(img));
-					camera.img = encoded;
-					
+					//camera.img = encoded;
+					camera.img = encoded.substring(0,10);
 					
 					/*
 					byte[] decoded = Base64.getDecoder().decode(encoded);
@@ -63,26 +64,47 @@ public class Gateway {
 					
 				}
 				
+				
+				getCameras = new URL("http://localhost:8080/WeatherStation_V0/rest/VORealObjectCommunication/getinfo");
+				connection = (HttpURLConnection) getCameras.openConnection();
+				is = connection.getInputStream();
+			    rd = new BufferedReader(new InputStreamReader(is));  
+			    message = org.apache.commons.io.IOUtils.toString(rd);
+				System.out.println(message);
+			    
 				// Invio cameras info a REST Service
 				URL url = new URL(REST_URL);
 				HttpURLConnection conn = (HttpURLConnection) url.openConnection();
 				conn.setDoOutput(true);
 				conn.setRequestMethod("POST");
 				conn.setRequestProperty("Content-Type", "application/json");
-
-				//HashMap<String, String> input_values = new HashMap<String, String>();
-
-
+				conn.setRequestProperty("User-Agent", "Mozilla/5.0");
+				conn.setRequestProperty("Accept-Language", "en-US,en;q=0.5");
+				conn.setDoOutput(true);
+				
 				String input = gson.toJson(cameras);
-
-				OutputStream os = null;
+				DataOutputStream wr = new DataOutputStream(conn.getOutputStream());
 				try{
-					os =conn.getOutputStream();
-					os.write(input.getBytes());
-					os.flush();
+					wr.writeBytes(input);
+					wr.flush();
+					wr.close();
+					System.out.println("Cameras imgs sent");
 				}catch(Exception e) {
 					System.out.println("/!\\ REST service unreachable");
 				}
+				
+				//Responce:
+				int responseCode = conn.getResponseCode();
+				System.out.println("Response Code : " + responseCode);
+				BufferedReader in = new BufferedReader(new InputStreamReader(conn.getInputStream()));
+				String inputLine;
+				StringBuffer response = new StringBuffer();
+				while ((inputLine = in.readLine()) != null) {
+					response.append(inputLine);
+				}
+				in.close();
+				System.out.println(response.toString());
+				
 				
 				Thread.sleep(3*60*1000);
 			}

@@ -18,6 +18,13 @@ public class OnReceiveData implements Runnable {
 		}
 
 	public void processing() {
+		/* Decode image:
+		byte[] decoded = Base64.getDecoder().decode(encoded);
+		// convert byte array back to BufferedImage
+		InputStream in = new ByteArrayInputStream(decoded);
+		BufferedImage bImageFromConvert = ImageIO.read(in);
+		ImageIO.write(bImageFromConvert, "jpg", new File("C:\\Users\\Giancarlo\\Documents\\news.jpg"));
+		*/
 		int r=(int)Math.random()*10;
 		//faccio cosi in modo da non notificare sempre l'evento
 		if(r>5) {
@@ -26,8 +33,8 @@ public class OnReceiveData implements Runnable {
 		
 	}
 	public void notifyEvent() {
-Gson json = new Gson();
-		//QUI DEVO PRENDERE L'URL DELL'ORCHESTRATORE CHE è SALVATO NELLA PROPS DEL SERVLET CONTEXT
+		Gson json = new Gson();
+		//QUI DEVO PRENDERE L'URL DELL'ORCHESTRATORE CHE ï¿½ SALVATO NELLA PROPS DEL SERVLET CONTEXT
 		String urlOrchestrator= System.getProperty("urlOrchestrator");
 		try {
 			URL url = new URL(urlOrchestrator);

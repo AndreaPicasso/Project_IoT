@@ -19,10 +19,10 @@ import net.spreadsheetspace.sdk.model.ViewDescriptor;
 
 public class SSSConnection implements Runnable {
 	static String server = "https://www.spreadsheetspace.net";
-	static String username = "andrea0pica@gmail.com";//username di spread
-	static String password = "sigmundfreud";//psw di spread tua
+	static String username = "simonemerello@hotmail.it";//username di spread
+	static String password = "123stella";//psw di spread tua
 	
-	static String recipient1 = "andrea0pica@gmail.com";//un tua mail
+	static String recipient1 = "simonemerello@hotmail.it";//un tua mail
 	static String recipient2 = "g.camera@cipi.unige.it";//un altra mail
 
 	static boolean createPublic = false;

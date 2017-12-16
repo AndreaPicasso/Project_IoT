@@ -70,7 +70,6 @@ public class ServiceListener implements ServletContextListener{
 		
 		
 		
-		
 		//Logger che scrive invece dentro dei file
 		//RollingFileAppender: i file di log non vengono scritti tutti dentro un file
 		//ma viene fatta una rotazione sui file
@@ -97,10 +96,8 @@ public class ServiceListener implements ServletContextListener{
 		//dei parametri
 		it.cipi.esercitazione.VORealObjectCommunication.init(sc);
 		
-
 		VORegistration reg = new VORegistration();
 		reg.register();
-		
 		
 	}
 

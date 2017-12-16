@@ -30,6 +30,7 @@ public class VORegistration {
 		
 		Gson json = new Gson();
 		
+		/* ....Registrazione
 		try {
 			URL url = new URL(VO_REGISTER);
 			HttpURLConnection conn = (HttpURLConnection) url.openConnection();
@@ -46,7 +47,7 @@ public class VORegistration {
 		catch(Exception e) {
 			e.printStackTrace();
 		}
-
+		*/
 	}
 	
 	public void unregister() {
