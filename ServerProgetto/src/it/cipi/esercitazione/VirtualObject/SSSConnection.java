@@ -88,7 +88,7 @@ public class SSSConnection implements Runnable {
 			listRecipients.add(recipient1);
 			Set<String> recipients = new HashSet<String>(listRecipients);
 			String excel_template = System.getProperty("user.dir") + "/template1.xlsx";
-			System.out.print(System.getProperty("user.dir"));
+			System.out.print("Folder template: "+System.getProperty("user.dir"));
 			//System.out.println("\nCreazione vista privata....");
 			ViewDescriptor viewDescriptor = sdk.createPrivateView("Cameras Info", recipients, table, excel_template, false, false, rows, cols);
 			
